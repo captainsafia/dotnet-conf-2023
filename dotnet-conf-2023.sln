@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalFormBinding", "MinimalFormBinding\MinimalFormBinding.csproj", "{31743928-62A8-44FC-B390-C6662F436AF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyedDI", "KeyedDI\KeyedDI.csproj", "{BA61A138-9613-4FAF-9D3D-FA1A1FE005D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{31743928-62A8-44FC-B390-C6662F436AF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31743928-62A8-44FC-B390-C6662F436AF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31743928-62A8-44FC-B390-C6662F436AF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA61A138-9613-4FAF-9D3D-FA1A1FE005D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA61A138-9613-4FAF-9D3D-FA1A1FE005D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA61A138-9613-4FAF-9D3D-FA1A1FE005D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA61A138-9613-4FAF-9D3D-FA1A1FE005D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
