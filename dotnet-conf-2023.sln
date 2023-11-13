@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalFormBinding", "Minim
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyedDI", "KeyedDI\KeyedDI.csproj", "{BA61A138-9613-4FAF-9D3D-FA1A1FE005D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRStatefulReconnect", "SignalRStatefulReconnect\SignalRStatefulReconnect.csproj", "{03AC7362-C2E0-4075-BA0B-8D41FBBBE10D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRStatefulReconnect", "SignalRStatefulReconnect\SignalRStatefulReconnect.csproj", "{03AC7362-C2E0-4075-BA0B-8D41FBBBE10D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestTimeouts", "RequestTimeouts\RequestTimeouts.csproj", "{F2EF8089-0D6D-4F78-A6EE-B51E2E592212}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestTimeouts", "RequestTimeouts\RequestTimeouts.csproj", "{F2EF8089-0D6D-4F78-A6EE-B51E2E592212}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewAnalyzers", "NewAnalyzers\NewAnalyzers.csproj", "{21D299A8-7120-43F6-B5E9-489476ACEFD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewAnalyzers", "NewAnalyzers\NewAnalyzers.csproj", "{21D299A8-7120-43F6-B5E9-489476ACEFD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortCircuit", "ShortCircuit\ShortCircuit.csproj", "{72BCC4FC-52C5-4606-A948-0E08C6C05579}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{21D299A8-7120-43F6-B5E9-489476ACEFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21D299A8-7120-43F6-B5E9-489476ACEFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21D299A8-7120-43F6-B5E9-489476ACEFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72BCC4FC-52C5-4606-A948-0E08C6C05579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72BCC4FC-52C5-4606-A948-0E08C6C05579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72BCC4FC-52C5-4606-A948-0E08C6C05579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72BCC4FC-52C5-4606-A948-0E08C6C05579}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
