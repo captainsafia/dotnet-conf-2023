@@ -11,7 +11,7 @@ builder.Services.AddAuthorization(configure: options =>
 var app = builder.Build();
 
 // ASP0016
-app.MapGet("/asp0016", context => Task.FromResult(context.Request.Query["name"]));
+app.MapGet("/asp0016", context => Task.FromResult(context.Request.Query["name"]);
 
 // ASP0020
 app.MapGet("/asp0020/{todo}", (Todo todo) => todo);
