@@ -5,8 +5,10 @@ builder.Services.AddKeyedSingleton<IStorageProvider>("azure", new AzureStoragePr
 
 var app = builder.Build();
 
-app.MapGet("/local/{name}", ([FromKeyedServices("local")] IStorageProvider provider, string name) => provider.GetDocument(name));
-app.MapGet("/azure/{name}", ([FromKeyedServices("azure")] IStorageProvider provider, string name) => provider.GetDocument(name));
+app.MapGet("/local/{name}", ([FromKeyedServices("local")] IStorageProvider provider, string name)
+    => provider.GetDocument(name));
+app.MapGet("/azure/{name}", ([FromKeyedServices("azure")] IStorageProvider provider, string name)
+    => provider.GetDocument(name));
 
 app.Run();
 
@@ -25,7 +27,7 @@ public class LocalStorageProvider : IStorageProvider
 
 public class AzureStorageProvider : IStorageProvider
 {
-        public Task<string> GetDocument(string name)
+    public Task<string> GetDocument(string name)
     {
         return Task.FromResult($"Resolving {name} from Azure storage.");
     }
