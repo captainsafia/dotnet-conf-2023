@@ -3,7 +3,10 @@ using SignalRStatefulReconnect;
 using SignalRStatefulReconnect.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(hubOptions =>
+{
+    hubOptions.ClientTimeoutInterval = TimeSpan.FromMinutes(5);
+});
 builder.Services.AddSingleton<IUserIdProvider, QueryStringUserIdProvider>();
 var app = builder.Build();
 

@@ -1,5 +1,5 @@
-(function () {
-    let name, connection, isConnected;
+(() => {
+    let name, connection;
     let connectButton = document.getElementById('connect');
     let disconnectButton = document.getElementById('disconnect');
     let autoReconnectCheckbox = document.getElementById('auto-reconnect');
@@ -18,36 +18,24 @@
         messageList.appendChild(child);
     }
 
-    function updateButtonState(connected) {
-        isConnected = connected;
+    function updateButtonState() {
+        let connected = connection?.state === signalR.HubConnectionState.Connected;
         connectButton.disabled = connected;
         disconnectButton.disabled = !connected;
         sendButton.disabled = !connected;
     }
 
-    updateButtonState(false);
-
-    sendForm.addEventListener('submit', function (event) {
-        if (isConnected) {
-            connection.invoke('SendAll', name, messageInput.value);
-            sendForm.reset();
-        }
-        event.preventDefault();
-    });
-
-    connectButton.addEventListener('click', async function () {
-        name = document.getElementById("display-name").value
+    async function connect() {
+        name = document.getElementById("display-name").value;
         if (name === "") {
             alert("Please enter a valid name");
             return;
         }
 
-        hubRoute = `chat?name=${name}`;
-        console.log(`http://${document.location.host}/chat`);
-
         var connectionBuilder = new signalR.HubConnectionBuilder()
+            .withUrl(`chat?name=${name}`)
             .configureLogging("trace")
-            .withUrl(hubRoute);
+            .withServerTimeout(5 * 60 * 1000);
 
         if (autoReconnectCheckbox.checked) {
             connectionBuilder.withAutomaticReconnect();
@@ -60,36 +48,42 @@
 
         connection.on('Send', addLine);
 
-        connection.onclose(function (e) {
-            if (e) {
-                addLine(`Connection closed with error: ${e}`, 'red');
+        connection.onclose(error => {
+            if (error) {
+                addLine(`Connection closed with error: ${error}`, 'red');
             }
             else {
                 addLine('Disconnected', 'green');
             }
-            updateButtonState(false);
+            updateButtonState();
         });
 
-        connection.onreconnecting(function (e) {
-            addLine(`Connection reconnecting: ${e}`, 'orange');
+        connection.onreconnecting(error => {
+            addLine(`Connection reconnecting: ${error}`, 'orange');
         });
 
-        connection.onreconnected(function () {
+        connection.onreconnected(() => {
             addLine('Connection reconnected!', 'green');
         });
 
         try {
             await connection.start();
-            updateButtonState(true);
+            updateButtonState();
             addLine('Connected successfully', 'green');
         } catch (e) {
-            updateButtonState(false);
             addLine(e, 'red');
         }
+    }
+
+    connectButton.addEventListener('click', connect);
+    disconnectButton.addEventListener('click', () => connection?.stop());
+    sendForm.addEventListener('submit', event => {
+        if (connection?.state === signalR.HubConnectionState.Connected) {
+            connection.invoke('SendAll', name, messageInput.value);
+            sendForm.reset();
+        }
+        event.preventDefault();
     });
 
-    disconnectButton.addEventListener('click', async function () {
-        await connection.stop();
-        updateButtonState(false);
-    });
+    updateButtonState();
 })();
