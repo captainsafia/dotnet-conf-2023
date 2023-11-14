@@ -8,7 +8,10 @@ builder.Services.AddRequestTimeouts(timeoutOptions =>
     timeoutOptions.AddPolicy("WriteTimeoutResponse", new RequestTimeoutPolicy
     {
         TimeoutStatusCode = StatusCodes.Status408RequestTimeout, // Default is 504 Gateway Timeout
-        WriteTimeoutResponse = httpContext => httpContext.Response.WriteAsync("Timed out with WriteTimeoutResponse!"), // Default is write nothing
+        WriteTimeoutResponse = httpContext =>
+        {
+            return httpContext.Response.WriteAsync("Timed out by WriteTimeoutResponse policy after 3 seconds!");
+        }, // Default is write nothing
         Timeout = TimeSpan.FromSeconds(3), // Default is no timeout
     });
 });
@@ -16,30 +19,33 @@ var app = builder.Build();
 
 app.UseRequestTimeouts();
 
+app.MapGet("/", () => "Hello World!");
+
 var timeouts = app.MapGroup("/timeouts");
 timeouts.WithRequestTimeout("WriteTimeoutResponse");
 
-timeouts.MapGet("/", DelayAsync);
-
+timeouts.MapGet("/default-policy", DelayAsync);
 // Writing a custom response prevents the "WriteTimeoutResponse
-timeouts.MapGet("/custom-response", async (int? delay, CancellationToken requestAborted) => {
+timeouts.MapGet("/custom-response", async (int? delay, ILogger<Program> logger, HttpContext context) =>
+{
     try
     {
-        await Task.Delay(TimeSpan.FromSeconds(delay ?? 5), requestAborted);
+        return await DelayAsync(delay, logger, context.RequestAborted);
     }
     catch (TaskCanceledException)
     {
-        return TypedResults.Content("Custom timeout!", "text/plain");
+        var policyName = context.GetEndpoint()?.Metadata.GetMetadata<RequestTimeoutAttribute>()?.PolicyName;
+        return TypedResults.Content($"Custom timeout response! Policy name: {policyName}", "text/plain");
     }
-
-    return TypedResults.Content("Custom no timeout!", "text/plain");
 });
 
 // The closest timeout configuration wins. Nothing is inherited from the "WriteTimeoutResponse" group policy.
-timeouts.MapGet("/2-second-timespan", DelayAsync).WithRequestTimeout(new TimeSpan(2));
+timeouts.MapGet("/2-second-timespan", DelayAsync).WithRequestTimeout(TimeSpan.FromSeconds(2));
 timeouts.MapGet("/2-second-attribute",
     [RequestTimeout(milliseconds: 2000)]
     (int? delay, ILogger<Program> logger, CancellationToken requestAborted) => DelayAsync(delay, logger, requestAborted));
+
+timeouts.MapGet("/disabled", DelayAsync).DisableRequestTimeout();
 
 app.Run();
 
@@ -51,7 +57,7 @@ static async Task<ContentHttpResult> DelayAsync(int? delay, ILogger<Program> log
     {
         await Task.Delay(delayTimespan, requestAborted);
         logger.LogInformation("Delay completed! Attempted delay: {Delay}, Actual time: {Elapsed}", delayTimespan, Stopwatch.GetElapsedTime(startTime));
-        return TypedResults.Content("No timeout!", "text/plain");
+        return TypedResults.Content($"No timeout! Delay: {delayTimespan}", "text/plain");
     }
     catch (TaskCanceledException)
     {
