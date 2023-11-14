@@ -3,6 +3,8 @@ var app = builder.Build();
 
 var myLogger = app.Services.GetRequiredService<ILogger<Program>>();
 
+app.MapGet("/", () => "Hello World!");
+
 app.Use(next =>
 {
     return httpContext =>
@@ -15,9 +17,9 @@ app.Use(next =>
 // Uncomment app.UseRouting() to prevent the above middleware from getting short circuited.
 //app.UseRouting();
 
-app.MapGet("/favicon.ico", () => TypedResults.StatusCode(StatusCodes.Status404NotFound))
-    .ShortCircuit();
+app.MapShortCircuit(404, "ignored", "prefixes");
 
-app.MapGet("/", () => "Hello World!");
+var faviconBytes = File.ReadAllBytes("favicon.ico");
+app.MapGet("/favicon.ico", () => TypedResults.File(faviconBytes, "image/x-icon")).ShortCircuit();
 
 app.Run();
