@@ -1,15 +1,13 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var myLogger = app.Services.GetRequiredService<ILogger<Program>>();
-
 app.MapGet("/", () => "Hello World!");
 
 app.Use(next =>
 {
     return httpContext =>
     {
-        myLogger.LogInformation("Request path: '{Path}'", httpContext.Request.Path);
+        app.Logger.LogInformation("Request path: '{Path}'", httpContext.Request.Path);
         return next(httpContext);
     };
 });

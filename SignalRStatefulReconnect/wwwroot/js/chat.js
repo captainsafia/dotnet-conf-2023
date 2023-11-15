@@ -1,13 +1,13 @@
 (() => {
+    const connectButton = document.getElementById('connect');
+    const disconnectButton = document.getElementById('disconnect');
+    const autoReconnectCheckbox = document.getElementById('auto-reconnect');
+    const statefulReconnectCheckbox = document.getElementById('stateful-reconnect');
+    const sendButton = document.getElementById('send-button');
+    const sendForm = document.getElementById('send-form');
+    const messageInput = document.getElementById('message-input');
+    const messageList = document.getElementById('message-list');
     let name, connection;
-    let connectButton = document.getElementById('connect');
-    let disconnectButton = document.getElementById('disconnect');
-    let autoReconnectCheckbox = document.getElementById('auto-reconnect');
-    let statefulReconnectCheckbox = document.getElementById('stateful-reconnect');
-    let sendButton = document.getElementById('send-button');
-    let sendForm = document.getElementById('send-form');
-    let messageInput = document.getElementById('message-input');
-    let messageList = document.getElementById('message-list');
 
     function addLine(line, color) {
         var child = document.createElement('li');

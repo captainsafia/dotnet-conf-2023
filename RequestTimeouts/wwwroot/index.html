@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <table>
+        <tr><th>Endpoint</th><th>Status</th><th>Elapsed</th><th>Response</th></tr>
+        <tr><td class="timeout">timeouts/default-policy</td></tr>
+        <tr><td class="timeout">timeouts/default-policy?delay=2</td></tr>
+        <tr><td class="timeout">timeouts/custom-response</td></tr>
+        <tr><td class="timeout">timeouts/2-second-timespan</td></tr>
+        <tr><td class="timeout">timeouts/2-second-attribute</td></tr>
+        <tr><td class="timeout">timeouts/disabled</td></tr>
+        <tr><td class="timeout">timeouts/disabled?delay=10</td></tr>
+        <tr><td class="timeout">middleware</td></tr>
+        <tr><td class="timeout">middleware?delay=10</td></tr>
+    </table>
+    <script>
+        async function testTimeout(timeoutElement) {
+            const tr = timeoutElement.parentElement;
+            const statusElement = tr.insertCell(1);
+            statusElement.innerText = "Loading...";
+
+            const path = timeoutElement.innerText;
+            const startTime = new Date();
+            const response = await fetch(path);
+
+            statusElement.innerText = response.status;
+
+            const text = await response.text();
+            const elapsedTime = (new Date() - startTime) / 1000;
+            tr.insertCell(2).innerText = elapsedTime;
+            tr.insertCell(3).innerText = text;
+        }
+
+        document.querySelectorAll('.timeout').forEach(testTimeout);
+    </script>
+</body>
+</html>

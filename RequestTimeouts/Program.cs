@@ -14,12 +14,21 @@ builder.Services.AddRequestTimeouts(timeoutOptions =>
         }, // Default is write nothing
         Timeout = TimeSpan.FromSeconds(3), // Default is no timeout
     });
+
+    timeoutOptions.DefaultPolicy = new RequestTimeoutPolicy
+    {
+        Timeout = TimeSpan.FromSeconds(7) ,// Default is no timeout
+        WriteTimeoutResponse = httpContext =>
+        {
+            return httpContext.Response.WriteAsync("Timed out by the default policy after 7 seconds!");
+        }, // Default is write nothing
+    };
 });
 var app = builder.Build();
 
 app.UseRequestTimeouts();
-
-app.MapGet("/", () => "Hello World!");
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 var timeouts = app.MapGroup("/timeouts");
 timeouts.WithRequestTimeout("WriteTimeoutResponse");
@@ -46,6 +55,27 @@ timeouts.MapGet("/2-second-attribute",
     (int? delay, ILogger<Program> logger, CancellationToken requestAborted) => DelayAsync(delay, logger, requestAborted));
 
 timeouts.MapGet("/disabled", DelayAsync).DisableRequestTimeout();
+
+app.Use(next =>
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+    return async httpContext =>
+    {
+        if (httpContext.Request.Path == "/middleware")
+        {
+            if (!int.TryParse(httpContext.Request.Query["delay"], out var delay))
+            {
+                delay = 5;
+            };
+            var contentResult = await DelayAsync(delay, logger, httpContext.RequestAborted);
+            await httpContext.Response.WriteAsync(contentResult.ResponseContent!);
+            return;
+        }
+
+        await next(httpContext);
+    };
+});
 
 app.Run();
 
